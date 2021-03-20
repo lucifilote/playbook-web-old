@@ -1,51 +1,28 @@
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React from 'react';
 import AuthCard from '../components/AuthCard';
-import firebase from '../config/firebase';
+import { useAuth } from '../components/AuthProvider';
+import HomeAuth from '../components/HomeAuth';
 
 const Home = () => {
-  const [user, setUser] = useState(null);
-
-  firebase.auth()
-    .onAuthStateChanged((user) => {
-      if (user) {
-        firebase.auth().currentUser.getIdTokenResult().then(idTokenResult => {
-          console.log(idTokenResult);
-        })
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    })
-
-  const handleLogout = () => {
-    firebase.auth()
-      .signOut()
-      .then(() => {
-        setUser(null);
-      });
-  }
-
-  const getRefreshToken = () => {
-    firebase.auth().currentUser.getIdTokenResult().then((idTokenResult) => {
-      console.log(idTokenResult)
-    })
-  }
+  const { user, isLoading } = useAuth();
 
   return (
-    <div className="bg-chevron-pattern h-screen">
+    <div className="bg-chevron-pattern h-screen overflow-auto">
       <Head>
         <title>Playbook Admin</title>
       </Head>
-      {!user
+      {isLoading && !user && <div className="max-w-sm mx-auto justify-center flex absolute top-2/4 left-2/4 transform -translate-y-2/4 -translate-x-2/4">
+        <CircularProgress size="80px" />
+      </div>}
+      {!user && !isLoading
         ?
         <AuthCard />
-        :
-        <button onClick={handleLogout}>Logout</button>
+        : null
       }
-      {user && <>
-        <div>User is loggedIn {user.displayName}</div>
-        <button onClick={getRefreshToken}>Refresh token</button>
+      {user && !isLoading && <>
+        <HomeAuth />
       </>}
     </div>
   )
