@@ -854,6 +854,11 @@ des.js@^1.0.0:
     inherits "^2.0.1"
     minimalistic-assert "^1.0.0"
 
+dialog-polyfill@^0.4.7:
+  version "0.4.10"
+  resolved "https://artifactory.cgm.ag:443/api/npm/global.npm.virtual/dialog-polyfill/-/dialog-polyfill-0.4.10.tgz#c4ea68a0deed4abb59a6a2a025c548b278cd532e"
+  integrity sha1-xOpooN7tSrtZpqKgJcVIsnjNUy4=
+
 diffie-hellman@^5.0.0:
   version "5.0.3"
   resolved "https://registry.yarnpkg.com/diffie-hellman/-/diffie-hellman-5.0.3.tgz#40e8ee98f55a2149607146921c63e1ae5f3d2875"
@@ -1006,6 +1011,14 @@ firebase@^8.3.1:
     "@firebase/remote-config" "0.1.33"
     "@firebase/storage" "0.4.5"
     "@firebase/util" "0.4.0"
+
+firebaseui@^4.1.0:
+  version "4.8.0"
+  resolved "https://artifactory.cgm.ag:443/api/npm/global.npm.virtual/firebaseui/-/firebaseui-4.8.0.tgz#74c10a30db17f2cbfe020c91b97d5e3c6e8efbbc"
+  integrity sha1-dMEKMNsX8sv+AgyRuX1ePG6O+7w=
+  dependencies:
+    dialog-polyfill "^0.4.7"
+    material-design-lite "^1.2.0"
 
 fsevents@~2.3.1:
   version "2.3.2"
@@ -1337,6 +1350,11 @@ make-dir@^3.0.2:
   integrity sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw==
   dependencies:
     semver "^6.0.0"
+
+material-design-lite@^1.2.0:
+  version "1.3.0"
+  resolved "https://artifactory.cgm.ag:443/api/npm/global.npm.virtual/material-design-lite/-/material-design-lite-1.3.0.tgz#d004ce3fee99a1eeb74a78b8a325134a5f1171d3"
+  integrity sha1-0ATOP+6Zoe63Sni4oyUTSl8RcdM=
 
 md5.js@^1.3.4:
   version "1.3.5"
@@ -1735,6 +1753,13 @@ react-dom@17.0.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     scheduler "^0.20.1"
+
+react-firebaseui@^4.1.0:
+  version "4.1.0"
+  resolved "https://artifactory.cgm.ag:443/api/npm/global.npm.virtual/react-firebaseui/-/react-firebaseui-4.1.0.tgz#fbd8381432b53b58ce56ee86df81e2a6e40af7b6"
+  integrity sha1-+9g4FDK1O1jOVu6G34HipuQK97Y=
+  dependencies:
+    firebaseui "^4.1.0"
 
 react-is@16.13.1, react-is@^16.8.1:
   version "16.13.1"
