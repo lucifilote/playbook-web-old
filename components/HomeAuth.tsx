@@ -89,12 +89,16 @@ export default function HomeAuth(props: Props) {
 
     useEffect(() => {
         if (user) {
-            firebase.firestore().collection('users').doc("20CiLxrgxWdOYflCNlTmg29WtaK2").get().then((response) => {
+            console.log(user)
+            firebase.firestore().collection('users').doc(user.uid).get().then((response) => {
                 setPlaybookUser(response.data());
-                const clubsPromises = response.data().clubs.map(club => club.get());
-                Promise.all(clubsPromises).then(values => {
-                    setClubsInfo(values);
-                })
+                const clubsPromises = response.data().clubs?.map(club => club.get());
+
+                if (clubsPromises) {
+                    Promise.all(clubsPromises).then(values => {
+                        setClubsInfo(values);
+                    })
+                }
 
             });
         }

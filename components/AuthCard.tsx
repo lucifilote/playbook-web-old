@@ -26,9 +26,30 @@ const uiConfig = {
 function AuthCard() {
     const [activeTab, setActiveTab] = useState(0);
     const classes = useStyles();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleChange = (ev, value) => {
         setActiveTab(value);
+    }
+
+    const handleLogin = (e: React.SyntheticEvent) => {
+        e.preventDefault();
+
+        firebase.auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(({ user }) => {
+                console.log(user);
+            })
+            .catch((err) => {
+
+                console.log(err.code, err.message)
+
+                setTimeout(() => {
+                }, 2000)
+            })
+        setEmail('');
+        setPassword('');
     }
 
     return (
@@ -48,22 +69,27 @@ function AuthCard() {
                     </Tabs>
                     <TabPanel value={activeTab} index={0}>
                         <div className="flex flex-col content-around px-6 pt-4">
-                            <TextField
-                                classes={classes}
-                                fullWidth={true}
-                                id="outlined-helperText"
-                                label="Email"
-                            />
-                            <TextField
-                                classes={classes}
-                                fullWidth={true}
-                                id="outlined-helperText"
-                                label="Parola"
-                                type="Parola"
-                            />
-                            <div className="mt-12">
-                                <Button variant="contained" color="primary" fullWidth>Intra in cont</Button>
-                            </div>
+                            <form onSubmit={handleLogin}>
+                                <TextField
+                                    classes={classes}
+                                    required
+                                    fullWidth={true}
+                                    label="Email"
+                                    type="email"
+                                    onChange={({ target }) => setEmail(target.value)}
+                                />
+                                <TextField
+                                    classes={classes}
+                                    required
+                                    fullWidth={true}
+                                    label="Parola"
+                                    type="password"
+                                    onChange={({ target }) => setPassword(target.value)}
+                                />
+                                <div className="mt-12">
+                                    <Button variant="contained" type="submit" color="primary" fullWidth>Intra in cont</Button>
+                                </div>
+                            </form>
                         </div>
                         <div className="my-8 relative">
                             <Divider className="my-8" />
