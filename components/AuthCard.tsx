@@ -32,7 +32,7 @@ function AuthCard() {
     }
 
     return (
-        <div className="py-16 max-w-sm mx-auto bg-white rounded-xl shadow-md items-center space-x-4 absolute top-2/4 left-2/4 transform -translate-y-2/4 -translate-x-2/4">
+        <div className="py-16 max-w-sm mx-auto bg-white rounded-xl shadow-md items-center space-x-4 absolute top-2/4 left-2/4 transform -translate-y-2/4 -translate-x-2/4 "  style={{ minWidth: '320px' }}>
             <div className="flex flex-col">
                 <Image className="" src="/images/logo.png" alt="Playbook Logo" width="210" height="95" objectFit="contain" />
                 <div className="py-6">
