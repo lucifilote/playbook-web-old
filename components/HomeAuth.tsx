@@ -1,24 +1,19 @@
 import AppBar from '@material-ui/core/AppBar';
-import Avatar from '@material-ui/core/Avatar';
-import Divider from '@material-ui/core/Divider';
 import Drawer from '@material-ui/core/Drawer';
 import Hidden from '@material-ui/core/Hidden';
 import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import { createStyles, makeStyles, Theme, useTheme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import { PowerSettingsNewOutlined } from '@material-ui/icons';
-import MailIcon from '@material-ui/icons/Mail';
 import MenuIcon from '@material-ui/icons/Menu';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
+import firebase from 'firebase';
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '../components/AuthProvider';
-import firebase from '../config/firebase';
+import firebaseClient from '../config/firebase';
+import { IClub } from '../interfaces';
 import ClubCard from './ClubCard';
+import MenuDrawer from './MenuDrawer';
+
 
 const drawerWidth = 240;
 
@@ -75,27 +70,19 @@ export default function HomeAuth(props: Props) {
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const { user } = useAuth();
-    const [playbookUser, setPlaybookUser] = useState(null);
-    const [clubsInfo, setClubsInfo] = useState([]);
+    const [clubsInfo, setClubsInfo] = useState<Array<firebase.firestore.DocumentSnapshot<IClub>>>([]);
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
 
-
-    const handleLogout = () => {
-        firebase.auth()
-            .signOut()
-    }
-
     useEffect(() => {
         if (user) {
             console.log(user)
-            firebase.firestore().collection('users').doc(user.uid).get().then((response) => {
-                setPlaybookUser(response.data());
+            firebaseClient.firestore().collection('users').doc(user.uid).get().then((response) => {
                 const clubsPromises = response.data().clubs?.map(club => club.get());
 
                 if (clubsPromises) {
-                    Promise.all(clubsPromises).then(values => {
+                    Promise.all(clubsPromises).then((values: any) => {
                         setClubsInfo(values);
                     })
                 }
@@ -103,38 +90,6 @@ export default function HomeAuth(props: Props) {
             });
         }
     }, []);
-
-    const drawer = (
-        <div>
-            <div className="p-8 flex flex-col">
-                <Avatar alt="Remy Sharp" src={user.photoURL} className={classes.large} />
-                {user.displayName && <div className="text-dark-blue text-2xl font-bold">{user.displayName}</div>}
-                {user.email && <div className="text-dark-blue text-md font-bold">{user.email}</div>}
-            </div>
-            <Divider />
-            <List>
-                {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                    <ListItem button key={text}>
-                        <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                        <ListItemText primary={text} />
-                    </ListItem>
-                ))}
-                <ListItem button onClick={handleLogout}>
-                    <ListItemIcon><PowerSettingsNewOutlined /></ListItemIcon>
-                    <ListItemText primary={"Deconecteaza-ma"} />
-                </ListItem>
-            </List>
-        </div>
-    );
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -171,7 +126,7 @@ export default function HomeAuth(props: Props) {
                             keepMounted: true, // Better open performance on mobile.
                         }}
                     >
-                        {drawer}
+                        <MenuDrawer />
                     </Drawer>
                 </Hidden>
                 <Hidden xsDown implementation="css">
@@ -182,16 +137,23 @@ export default function HomeAuth(props: Props) {
                         variant="permanent"
                         open
                     >
-                        {drawer}
+                        <MenuDrawer />
                     </Drawer>
                 </Hidden>
             </nav>
             <main className={classes.content}>
                 <div className={classes.toolbar} />
                 {clubsInfo.length > 0 && <>
-                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">{clubsInfo.map((club, index) => {
+                    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">{clubsInfo.map((club: firebase.firestore.DocumentSnapshot, index) => {
+                        console.log(club.data());
                         return <div className="" key={index}>
-                            <ClubCard title={club.data().name} key={index} />
+                            <ClubCard
+                                key={index}
+                                firebaseRef={club.ref}
+                                title={club.data().name}
+                                imageUrl={club.data().photos[0]}
+                                location={club.data().location}
+                            />
                         </div>
                     })}
                     </div>

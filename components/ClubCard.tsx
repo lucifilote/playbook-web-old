@@ -1,55 +1,59 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { IconButton } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import firebase from 'firebase';
+import React from 'react';
+import { ILocation } from '../interfaces';
 
 const useStyles = makeStyles({
     root: {
         minWidth: 275,
     },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
+    cardContent: {
+        backgroundImage: (props: PassedProps) => `url(${props.imageUrl})`,
+        backgroundSize: 'cover',
+        minHeight: 200
     },
-    title: {
-        fontSize: 14,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-});
+}
+);
 
 type PassedProps = {
     title: string;
+    imageUrl: string;
+    firebaseRef: firebase.firestore.DocumentReference;
+    location: ILocation;
 };
 
 function ClubCard(props: PassedProps) {
-    const classes = useStyles();
+    const classes = useStyles(props);
 
+    const getAddress = () => {
+        const { location } = props;
+        return `${location.street} ${location.info ? `(${location.info})` : ''} ${location.city}, ${location.county}`;
+    }
     return (
         <Card className={classes.root}>
-            <CardContent>
-                <Typography className={classes.title} color="textSecondary" gutterBottom>
-                    Word of the Day
-        </Typography>
-                <Typography variant="h5" component="h2">
-                    {props.title}
-                </Typography>
-                <Typography className={classes.pos} color="textSecondary">
-                    adjective
-        </Typography>
-                <Typography variant="body2" component="p">
-                    well meaning and kindly.
-          <br />
-                    {'"a benevolent smile"'}
-                </Typography>
+            <CardContent classes={{ root: classes.cardContent }}>
             </CardContent>
-            <CardActions>
-                <Button size="small">Learn More</Button>
+            <CardActions >
+                <div className="flex items-center justify-between w-full">
+                    <div className="flex flex-col">
+                        <div className="font-bold color-primary text-sm">
+                            {props.title}
+                        </div>
+                        <div className="text-xs">
+                            {getAddress()}
+                        </div>
+                    </div>
+                    <div>
+                        <IconButton aria-label="settings">
+                            <MoreVertIcon />
+                        </IconButton>
+                    </div>
+                </div>
             </CardActions>
         </Card>
     );
