@@ -5,8 +5,7 @@ import GridOnOutlined from '@material-ui/icons/GridOnOutlined';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React from "react";
-import firebase from '../config/firebase';
-import { useAuth } from "./AuthProvider";
+import firebase from '../config/firebaseClient';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -20,22 +19,22 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const menuItems = [
-    { label: 'Terenuri', to: '/', icon: <><GridOnOutlined /></> },
-    { label: 'Profilul meu', to: '/profile', icon: <><PersonRounded /></> },
-    { label: 'Setari', to: '/settings', icon: <><Settings /></> },
-    { label: 'Termeni & Conditii / Confidentialitate', to: '/terms-and-conditions', icon: <><TextsmsOutlined /></> },
+export const menuItems = [
+    { label: 'Terenuri', to: '/user', icon: <><GridOnOutlined /></> },
+    { label: 'Profilul meu', to: '/user/profile', icon: <><PersonRounded /></> },
+    { label: 'Setari', to: '/user/settings', icon: <><Settings /></> },
+    { label: 'Termeni & Conditii / Confidentialitate', to: '/user/terms-and-conditions', icon: <><TextsmsOutlined /></> },
 ];
 
 
-function MenuDrawer() {
+function MenuDrawer({ user }) {
     const classes = useStyles();
-    const { user } = useAuth();
     const router = useRouter();
-
-    const handleLogout = () => {
-        firebase.auth()
+    
+    const handleLogout = async () => {
+        await firebase.auth()
             .signOut()
+        router.push('/')
     }
 
     return (
@@ -50,9 +49,9 @@ function MenuDrawer() {
             <Divider />
             <List>
                 {menuItems.map((menu, index) => (
-                    <Link href={menu.to} >
+                    <Link href={menu.to} key={index}>
                         <a className="text-dark-blue font-bold no-underline	">
-                            <ListItem button key={index} selected={menu.to === router.pathname} >
+                            <ListItem button key={index} selected={menu.to === router.asPath} >
                                 <ListItemIcon classes={{ root: classes.listItemRoot }}>{menu.icon}</ListItemIcon>
                                 <ListItemText primary={menu.label} classes={{ primary: classes.listItemRoot }} />
                             </ListItem>
@@ -63,7 +62,7 @@ function MenuDrawer() {
             <Divider />
             <List>
                 <ListItem button onClick={handleLogout} className="text-dark-blue" classes={{ root: classes.listItemRoot }}>
-                    <ListItemIcon classes={{ root: classes.listItemRoot }}><PowerSettingsNewOutlined/></ListItemIcon>
+                    <ListItemIcon classes={{ root: classes.listItemRoot }}><PowerSettingsNewOutlined /></ListItemIcon>
                     <ListItemText classes={{ primary: classes.listItemRoot }} color="primary" primary={"Deconecteaza-ma"} />
                 </ListItem>
             </List>

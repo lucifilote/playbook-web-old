@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import nookies from 'nookies';
 import { createContext, useContext, useEffect, useState } from 'react';
-import fire from '../config/firebase';
+import fire from '../config/firebaseClient';
 
 const AuthContext = createContext<{ user: firebase.User | null, isLoading: boolean }>({
     user: null,

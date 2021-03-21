@@ -1,12 +1,19 @@
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Head from 'next/head';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 import AuthCard from '../components/AuthCard';
 import { useAuth } from '../components/AuthProvider';
-import HomeAuth from '../components/HomeAuth';
 
 const Home = () => {
   const { user, isLoading } = useAuth();
+  const router = useRouter()
+
+  useEffect(() => {
+    if (user && !isLoading) {
+      router.push('/user');
+    }
+  }, [user, isLoading])
 
   return (
     <div className="bg-chevron-pattern h-screen overflow-auto">
@@ -21,9 +28,6 @@ const Home = () => {
         <AuthCard />
         : null
       }
-      {user && !isLoading && <>
-        <HomeAuth />
-      </>}
     </div>
   )
 }

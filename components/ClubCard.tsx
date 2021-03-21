@@ -23,7 +23,6 @@ const useStyles = makeStyles({
 type PassedProps = {
     title: string;
     imageUrl: string;
-    firebaseRef: firebase.firestore.DocumentReference;
     location: ILocation;
 };
 

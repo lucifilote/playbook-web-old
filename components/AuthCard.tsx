@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import TabPanel from '../components/TabPanel';
-import firebase from '../config/firebase';
+import firebase from '../config/firebaseClient';
 
 const useStyles = makeStyles({
     root: {
@@ -39,14 +39,9 @@ function AuthCard() {
         firebase.auth()
             .signInWithEmailAndPassword(email, password)
             .then(({ user }) => {
-                console.log(user);
             })
             .catch((err) => {
-
                 console.log(err.code, err.message)
-
-                setTimeout(() => {
-                }, 2000)
             })
         setEmail('');
         setPassword('');
